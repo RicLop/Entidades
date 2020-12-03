@@ -1,0 +1,12 @@
+﻿using {NomeSistema}.Domain.Enumerators;
+using {NomeSistema}.Domain.Interfaces;
+using System;
+using System.Collections.Generic;
+
+namespace {NomeSistema}.Domain.Entities
+{
+    public class {NomeEntidade} : Abstract{TipoEntidade}Entity{Hierarquico}
+    {
+        {Campos}
+    }
+}

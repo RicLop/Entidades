@@ -1,0 +1,45 @@
+﻿using {NomeSistema}.Domain.Entities;
+using {NomeSistema}.Domain.Interfaces;
+using {NomeSistema}.Domain.ViewModels;
+using {NomeSistema}.Infra.Data.Context;
+using MongoDB.Driver;
+using System;
+using System.Linq;
+
+namespace {NomeSistema}.Infra.Data.Repository
+{
+    public class {NomeEntidade}Repository : NpgsqlRepository<{NomeEntidade}>, I{NomeEntidade}Repository
+    {
+        private MongoRepository<{NomeEntidade}View> _mongoRepo = new MongoRepository<{NomeEntidade}View>();
+
+        public {NomeEntidade}Repository(NpgsqlContext npgsqlContext) : base(npgsqlContext)
+        {
+        }
+
+        public void Inserir({NomeEntidade} obj) =>
+            base.Insert(obj);
+        public void Atualizar({NomeEntidade} obj) =>
+            base.Update(obj);
+        public {NomeEntidade} Obter(Guid id) =>
+            base.Select(id);
+        public IQueryable<{NomeEntidade}> ObterSqlInstance() =>
+            base.Select();
+
+        public void Inserir({NomeEntidade}View obj) =>
+            _mongoRepo.Insert(obj);
+        public void Atualizar({NomeEntidade}View obj) =>
+            _mongoRepo.Update(obj);
+        public {NomeEntidade}View ObterNoSql(Guid id) =>
+            _mongoRepo.Get(id);
+        public IMongoCollection<{NomeEntidade}View> ObterNoSqlInstance() =>
+            _mongoRepo.Instance;
+
+        public void Remover(Guid id, bool NoSql = false)
+        {
+            if (NoSql)
+                _mongoRepo.Delete(id);
+            else
+                base.Delete(id);
+        }
+    }
+}

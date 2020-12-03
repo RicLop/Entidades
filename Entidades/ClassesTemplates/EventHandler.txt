@@ -1,0 +1,102 @@
+﻿using MediatR;
+using {NomeSistema}.Domain.Attributes;
+using {NomeSistema}.Domain.Commands;
+using {NomeSistema}.Domain.Entities;
+using {NomeSistema}.Domain.Events;
+using {NomeSistema}.Domain.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace {NomeSistema}.Domain.EventHandlers
+{
+    public class {NomeEntidade}EventHandler
+    {
+        public static {NomeEntidade}View ConverterEntidadeParaView(Abstract{NomeEntidade}Event notification)
+        {
+            var repository = notification.Repository.SqlInstance;
+            var mediator = notification.Mediator;
+            var entidade = notification.Mapper.Map<{NomeEntidade}View>(notification.{NomeEntidade}Instance);
+            {Mappers}
+
+            return entidade;
+        }
+    }
+
+    public class {NomeEntidade}SalvarDadosBancoSQL :
+        INotificationHandler<{NomeEntidade}CriadaEvent>
+    {
+        public Task Handle({NomeEntidade}CriadaEvent notification, CancellationToken cancellationToken)
+        {
+            var repository = notification.Repository;
+
+            repository.Inserir(notification.{NomeEntidade}Instance);
+            repository.Commit();
+
+            return Task.CompletedTask;
+        }
+    }
+
+    public class {NomeEntidade}SalvarDadosBancoNoSQL :
+        INotificationHandler<{NomeEntidade}CriadaEvent>
+    {
+        public Task Handle({NomeEntidade}CriadaEvent notification, CancellationToken cancellationToken)
+        {
+            notification.Repository.Inserir({NomeEntidade}EventHandler.ConverterEntidadeParaView(notification));
+
+            return Task.CompletedTask;
+        }
+    }
+
+    public class {NomeEntidade}AtualizarDadosBancoSQL :
+       INotificationHandler<{NomeEntidade}AtualizadaEvent>
+    {
+        public Task Handle({NomeEntidade}AtualizadaEvent notification, CancellationToken cancellationToken)
+        {
+            var repository = notification.Repository;
+
+            repository.Atualizar(notification.{NomeEntidade}Instance);
+            repository.Commit();
+
+            return Task.CompletedTask;
+        }
+    }
+
+    public class {NomeEntidade}AtualizarDadosBancoNoSQL :
+        INotificationHandler<{NomeEntidade}AtualizadaEvent>
+    {
+        public Task Handle({NomeEntidade}AtualizadaEvent notification, CancellationToken cancellationToken)
+        {
+            notification.Repository.Atualizar({NomeEntidade}EventHandler.ConverterEntidadeParaView(notification));
+
+            return Task.CompletedTask;
+        }
+    }
+
+    public class {NomeEntidade}ApagarDadosBancoSQL :
+       INotificationHandler<{NomeEntidade}ApagadaEvent>
+    {
+        public Task Handle({NomeEntidade}ApagadaEvent notification, CancellationToken cancellationToken)
+        {
+            var repository = notification.Repository;
+
+            repository.Remover(notification.Id);
+            repository.Commit();
+
+            return Task.CompletedTask;
+        }
+    }
+
+    public class {NomeEntidade}ApagarDadosBancoNoSQL :
+        INotificationHandler<{NomeEntidade}ApagadaEvent>
+    {
+        public Task Handle({NomeEntidade}ApagadaEvent notification, CancellationToken cancellationToken)
+        {
+            notification.Repository.Remover(notification.Id, NoSql: true);
+
+            return Task.CompletedTask;
+        }
+    }
+}

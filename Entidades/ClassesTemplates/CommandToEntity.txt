@@ -1,0 +1,14 @@
+﻿using AutoMapper;
+using {NomeSistema}.Domain.Commands;
+using {NomeSistema}.Domain.Entities;
+
+namespace {NomeSistema}.Infra.Shared.Mapper
+{
+    public class CommandToEntity : Profile
+    {
+        public CommandToEntity()
+        {
+{ComToEnt}
+        }
+    }
+}

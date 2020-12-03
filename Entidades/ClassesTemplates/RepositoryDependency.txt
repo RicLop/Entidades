@@ -1,0 +1,15 @@
+﻿using {NomeSistema}.Domain.Entities;
+using {NomeSistema}.Domain.Interfaces;
+using {NomeSistema}.Infra.Data.Repository;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace {NomeSistema}.Infra.CrossCutting.InversionOfControl
+{
+    public static class NpgsqlRepositoryDependency
+    {
+        public static void AddNpgsqlRepositoryDependency(this IServiceCollection services)
+        {
+{RepositoryDep}
+        }
+    }
+}

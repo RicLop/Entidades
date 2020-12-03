@@ -1,0 +1,39 @@
+﻿using EFSecondLevelCache.Core.Contracts;
+using {NomeSistema}.Domain.Entities;
+using {NomeSistema}.Domain.ViewModels;
+using {NomeSistema}.Infra.Data.Mappings;
+using {NomeSistema}.Infra.Shared.Extensions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using System;
+using System.Linq;
+
+namespace {NomeSistema}.Infra.Data.Context
+{
+    public class NpgsqlContext : DbContext
+    {
+        public const string DatabaseSchema = "security";
+
+        public NpgsqlContext(DbContextOptions options) : base(options)
+        {
+        }
+
+{DbSet}
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.AlterarSchema(DatabaseSchema);
+            modelBuilder.RemoverPluralDoNomeDasTabelas();
+
+{Map}
+        }
+
+        public void ClearAllCachedEntries()
+        {
+            this.GetService<IEFCacheServiceProvider>().ClearAllCachedEntries();
+        }
+    }
+}
+

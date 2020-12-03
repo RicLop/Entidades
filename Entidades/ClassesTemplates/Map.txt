@@ -1,0 +1,14 @@
+﻿using {NomeSistema}.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace {NomeSistema}.Infra.Data.Mappings
+{
+    public class {NomeEntidade}Map : IEntityTypeConfiguration<{NomeEntidade}>
+    {
+        public void Configure(EntityTypeBuilder<{NomeEntidade}> builder)
+        {
+{Mappings}
+        }
+    }
+}

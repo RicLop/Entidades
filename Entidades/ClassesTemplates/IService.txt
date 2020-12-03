@@ -1,0 +1,28 @@
+﻿using {NomeSistema}.Domain.Commands;
+using {NomeSistema}.Domain.Core;
+using {NomeSistema}.Domain.Entities;
+using {NomeSistema}.Domain.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace {NomeSistema}.Domain.Interfaces
+{
+    public interface I{NomeEntidade}Service
+    {
+        Task<Response<{NomeEntidade}>> Inserir(Criar{NomeEntidade}Command command);
+
+        Task<Response<{NomeEntidade}>> Atualizar(Atualizar{NomeEntidade}Command command);
+
+        Task<Response<Guid>> Apagar(Apagar{NomeEntidade}Command command);
+        
+        Task<Response<IEnumerable<Response<Guid>>>> ApagarVarios(ApagarVarios{NomeEntidade}Command command);
+
+        IQueryable<{NomeEntidade}> Obter();
+
+        IEnumerable<{NomeEntidade}> ObterTodos();
+
+        IQueryable<{NomeEntidade}> ObterPelaId(Guid id);
+    }
+}

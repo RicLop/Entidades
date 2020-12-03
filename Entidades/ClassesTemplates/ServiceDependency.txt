@@ -1,0 +1,15 @@
+﻿using {NomeSistema}.Domain.Interfaces;
+using {NomeSistema}.Service.Services;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace {NomeSistema}.Infra.CrossCutting.InversionOfControl
+{
+    public static class ServiceDependency
+    {
+        public static void AddServiceDependency(this IServiceCollection services)
+        {
+{ServiceDep}
+        }
+    }
+}
+

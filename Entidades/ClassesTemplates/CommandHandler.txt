@@ -1,0 +1,146 @@
+﻿using AutoMapper;
+using MediatR;
+using {NomeSistema}.Domain.Commands;
+using {NomeSistema}.Domain.Core;
+using {NomeSistema}.Domain.Entities;
+using {NomeSistema}.Domain.Events;
+using {NomeSistema}.Domain.Extensions;
+using {NomeSistema}.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace {NomeSistema}.Domain.CommandHandlers
+{
+    public class {NomeEntidade}CommandHandler : {TipoHandler},
+        IRequestHandler<Criar{NomeEntidade}Command, Response<{NomeEntidade}>>,
+        IRequestHandler<Atualizar{NomeEntidade}Command, Response<{NomeEntidade}>>,
+        IRequestHandler<Apagar{NomeEntidade}Command, Response<Guid>>,
+        IRequestHandler<ApagarVarios{NomeEntidade}Command, Response<IEnumerable<Response<Guid>>>>,
+        IRequestHandler<Obter{NomeEntidade}InstanceCommand, List<{NomeEntidade}>>
+    {
+        private readonly I{NomeEntidade}Repository _repository;
+        public {NomeEntidade}CommandHandler(IMediator mediator, IMapper mapper, IAuth auth, I{NomeEntidade}Repository repository) :
+            base(auth, mapper, mediator)
+        {
+            _repository = repository;
+        }
+
+        public async Task<Response<{NomeEntidade}>> Handle(Criar{NomeEntidade}Command command, CancellationToken cancellationToken)
+        {
+            if (!command.IsValid())
+                return ErrorResponse(command);
+
+            var entidade = Mapper.Map<{NomeEntidade}>(command);
+            
+            if (entidade.Id == Guid.Empty || entidade.Id == null)
+                entidade.Id = Guid.NewGuid();
+
+            {TenantId}
+            {EmpresaId}
+
+            var excecao = ExecutarValidacoes(entidade, criarCommand: command);
+            if (excecao != null && excecao.Any(x => x != null && x.ErrorMessage != ""))
+                return new Response<{NomeEntidade}>()
+                {
+                    Errors = excecao
+                };
+
+            var evento = new {NomeEntidade}CriadaEvent
+            {
+                CadastroUsuarioId = Auth.Usuario.Id,
+                CadastroUsuarioNome = Auth.Usuario.NomeUsuario,
+                CadastroData = DateTime.Now,
+                Repository = _repository,
+                Mapper = Mapper,           
+                Mediator = Mediator,
+                {NomeEntidade}Instance = entidade
+            };
+
+            Mediator.Publish(evento, cancellationToken);
+
+            return Response(entidade);
+        }
+
+        public async Task<Response<{NomeEntidade}>> Handle(Atualizar{NomeEntidade}Command command, CancellationToken cancellationToken)
+        {
+            var entidade = _repository.SqlInstance.First(x => x.Id == command.Id);
+            
+            var excecao = ExecutarValidacoes(entidade, atualizarCommand: command);
+            if (excecao != null && excecao.Any(x => x != null && x.ErrorMessage != ""))            
+                return new Response<{NomeEntidade}>()
+                {
+                    Errors = excecao
+                };            
+
+            Mapper.Map(command, entidade);
+
+             var evento = new {NomeEntidade}AtualizadaEvent
+            {
+                AlteracaoUsuarioId = Auth.Usuario.Id,
+                AlteracaoUsuarioNome = Auth.Usuario.NomeUsuario,
+                AlteracaoData = DateTime.Now,
+                Repository = _repository,
+                Mapper = Mapper,                
+                Mediator = Mediator,
+                {NomeEntidade}Instance = entidade
+            };
+
+            Mediator.Publish(evento, cancellationToken);
+
+            return Response(entidade);
+        }
+
+        public List<DomainError> ExecutarValidacoes({NomeEntidade} entidade,
+                                                    Criar{NomeEntidade}Command criarCommand = null,
+                                                    Atualizar{NomeEntidade}Command atualizarCommand = null)
+        {
+            var erros = new List<DomainError>();
+
+            return erros;
+        }
+
+        public async Task<Response<Guid>> Handle(Apagar{NomeEntidade}Command command, CancellationToken cancellationToken)
+        {
+            if (!command.IsValid())
+                return ErrorResponse(command);
+
+            var entidade = await _repository.SqlInstance.FirstOrDefaultCacheableAsync(x => x.Id == command.Id);
+
+            if (entidade == null)
+                return Response(command.Id);
+
+            Mediator.Publish(new {NomeEntidade}ApagadaEvent(command.Id, _repository), cancellationToken);
+
+            return Response(command.Id);
+        }
+
+        public async Task<Response<IEnumerable<Response<Guid>>>> Handle(ApagarVarios{NomeEntidade}Command command, CancellationToken cancellationToken)
+        {
+            var result = new List<Response<Guid>>();
+            foreach (var id in command.Ids)
+            {
+                result.Add(await Mediator.Send(new Apagar{NomeEntidade}Command(id)));
+            }
+
+            return Response<IEnumerable<Response<Guid>>>(result);
+        }
+
+        public Task<List<{NomeEntidade}>> Handle (Obter{NomeEntidade}InstanceCommand command, CancellationToken cancellationToken)
+        {
+            var query = _repository.SqlInstance;
+
+            foreach (var include in command.Includes)
+            {
+                if (include.Body is MemberExpression memberExpression)
+                    query = query.Include(memberExpression.Member.Name);
+            }
+
+            return Task.Run(() => { return query.Where(command.Predicate).ToList(); });
+        }
+    }
+}

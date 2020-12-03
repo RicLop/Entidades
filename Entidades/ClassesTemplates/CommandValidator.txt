@@ -1,0 +1,42 @@
+﻿using FluentValidation;
+using {NomeSistema}.Domain.Commands;
+using System;
+
+namespace {NomeSistema}.Domain.CommandValidators
+{
+    public class Create{NomeEntidade}CommandValidator<TCommand> : AbstractValidator<TCommand> where TCommand : Abstract{NomeEntidade}Command
+    {
+        public Create{NomeEntidade}CommandValidator()
+        {
+{Validators}
+        }
+    }
+
+    public class Update{NomeEntidade}CommandValidator<TCommand> : AbstractValidator<TCommand> where TCommand : Abstract{NomeEntidade}Command
+    {
+        public Update{NomeEntidade}CommandValidator()
+        {
+            RuleFor(x => x.Id)
+                 .NotEmpty();
+{Validators}
+        }
+    }
+
+    public class {NomeEntidade}DeleteValidator : AbstractValidator<Apagar{NomeEntidade}Command>
+    {
+        public {NomeEntidade}DeleteValidator()
+        {
+            RuleFor(x => x.Id)
+                .NotEmpty();
+        }
+    }
+
+    public class {NomeEntidade}DeleteManyValidator : AbstractValidator<ApagarVarios{NomeEntidade}Command>
+    {
+        public {NomeEntidade}DeleteManyValidator()
+        {
+            RuleForEach(x => x.Ids)
+                .NotEmpty();
+        }
+    }
+}

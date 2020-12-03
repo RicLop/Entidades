@@ -1,0 +1,28 @@
+﻿using {NomeSistema}.Domain.Entities;
+using {NomeSistema}.Domain.ViewModels;
+using MongoDB.Driver;
+using System;
+using System.Linq;
+
+namespace {NomeSistema}.Domain.Interfaces
+{
+    public interface I{NomeEntidade}Repository
+    {
+        IQueryable<{NomeEntidade}> SqlInstance { get => ObterSqlInstance(); }
+        IQueryable<{NomeEntidade}View> NoSqlInstance { get => ObterNoSqlInstance().AsQueryable(); }
+
+        void Inserir({NomeEntidade} obj);
+        void Atualizar({NomeEntidade} obj);
+        {NomeEntidade} Obter(Guid id);
+        IQueryable<{NomeEntidade}> ObterSqlInstance();
+
+        void Inserir({NomeEntidade}View obj);
+        void Atualizar({NomeEntidade}View obj);
+        {NomeEntidade}View ObterNoSql(Guid id);
+        IMongoCollection<{NomeEntidade}View> ObterNoSqlInstance();
+
+        void Remover(Guid id, bool NoSql = false);
+
+        void Commit();
+    }
+}

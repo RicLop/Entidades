@@ -1,0 +1,80 @@
+﻿using System;
+using System.Collections.Generic;
+using MediatR;
+using {NomeSistema}.Domain.CommandValidators;
+using {NomeSistema}.Domain.Core;
+using {NomeSistema}.Domain.Entities;
+using {NomeSistema}.Domain.Enumerators;
+using {NomeSistema}.Domain.Interfaces;
+using System.Linq;
+using System.Linq.Expressions;
+
+namespace {NomeSistema}.Domain.Commands
+{
+    public abstract class Abstract{NomeEntidade}Command : AbstractCommand<{NomeEntidade}>{Hierarquico}
+    {
+        {Campos}
+    }
+
+    public class Criar{NomeEntidade}Command : Abstract{NomeEntidade}Command
+    {
+        public override bool IsValid()
+        {
+            ValidationResult = new Create{NomeEntidade}CommandValidator<Criar{NomeEntidade}Command>().Validate(this);
+            return ValidationResult.IsValid;
+        }
+    }
+
+    public class Atualizar{NomeEntidade}Command : Abstract{NomeEntidade}Command
+    {
+        public override bool IsValid()
+        {
+            ValidationResult = new Update{NomeEntidade}CommandValidator<Atualizar{NomeEntidade}Command>().Validate(this);
+            return ValidationResult.IsValid;
+        }
+    }
+
+    public class Obter{NomeEntidade}InstanceCommand : IRequest<List<{NomeEntidade}>>
+    {
+        public Obter{NomeEntidade}InstanceCommand(Expression<Func<{NomeEntidade}, bool>> predicate, params Expression<Func<{NomeEntidade}, object>>[] includes)
+        {
+            Predicate = predicate;
+            Includes = includes;
+        }
+
+        public Expression<Func<{NomeEntidade}, bool>> Predicate { get; set; }
+        public Expression<Func<{NomeEntidade}, object>>[] Includes { get; set; }
+    }
+
+    public class Apagar{NomeEntidade}Command : AbstractCommand<Guid>
+    {
+        public Guid Id { get; private set; }
+
+        public Apagar{NomeEntidade}Command(Guid id)
+        {
+            Id = id;
+        }
+
+        public override bool IsValid()
+        {
+            ValidationResult = new {NomeEntidade}DeleteValidator().Validate(this);
+            return ValidationResult.IsValid;
+        }
+    }
+
+    public class ApagarVarios{NomeEntidade}Command : AbstractCommand<IEnumerable<Response<Guid>>>
+    {
+        public IEnumerable<Guid> Ids { get; }
+
+        public ApagarVarios{NomeEntidade}Command(IEnumerable<Guid> ids)
+        {
+            Ids = ids;
+        }
+
+        public override bool IsValid()
+        {
+            ValidationResult = new {NomeEntidade}DeleteManyValidator().Validate(this);
+            return ValidationResult.IsValid;
+        }
+    }
+}

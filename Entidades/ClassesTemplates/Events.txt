@@ -1,0 +1,34 @@
+﻿using MediatR;
+using {NomeSistema}.Domain.Entities;
+using {NomeSistema}.Domain.Enumerators;
+using {NomeSistema}.Domain.Interfaces;
+using System;
+using System.Collections.Generic;
+
+namespace {NomeSistema}.Domain.Events
+{
+    public abstract class Abstract{NomeEntidade}Event : Abstract{TipoEntidade}Event<I{NomeEntidade}Repository>, INotification
+    {
+        public {NomeEntidade} {NomeEntidade}Instance { get; set; }
+    }
+
+    public class {NomeEntidade}CriadaEvent : Abstract{NomeEntidade}Event
+    {
+    }
+
+    public class {NomeEntidade}AtualizadaEvent : Abstract{NomeEntidade}Event
+    {
+    }
+
+    public class {NomeEntidade}ApagadaEvent : INotification
+    {
+        public {NomeEntidade}ApagadaEvent(Guid id, I{NomeEntidade}Repository repository)
+        {
+            Id = id;
+            Repository = repository;
+        }
+
+        public Guid Id { get; set; }
+        public I{NomeEntidade}Repository Repository { get; set; }
+    }
+}

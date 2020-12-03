@@ -1,0 +1,45 @@
+﻿using AutoMapper;
+using MediatR;
+using {NomeSistema}.Domain.Commands;
+using {NomeSistema}.Domain.Core;
+using {NomeSistema}.Domain.Entities;
+using {NomeSistema}.Domain.Interfaces;
+using {NomeSistema}.Domain.ViewModels;
+using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace {NomeSistema}.Service.Services
+{
+    public class {NomeEntidade}Service : ServiceBase, I{NomeEntidade}Service
+    {
+        private readonly I{NomeEntidade}Repository _{NomeEntidade}Repository;
+
+        public {NomeEntidade}Service(I{NomeEntidade}Repository {NomeEntidade}Repository, IMapper mapper, IMediator mediator) : base(mapper, mediator)
+        {
+            _{NomeEntidade}Repository = {NomeEntidade}Repository;
+        }
+
+        public IEnumerable<{NomeEntidade}> ObterTodos() =>
+            _{NomeEntidade}Repository.SqlInstance.ToList();
+
+        public IQueryable<{NomeEntidade}> ObterPelaId(Guid id) =>
+            _{NomeEntidade}Repository.SqlInstance.Where(x => x.Id.Equals(id));
+
+        public IQueryable<{NomeEntidade}> Obter() =>
+            _{NomeEntidade}Repository.SqlInstance;
+
+        public async Task<Response<{NomeEntidade}>> Inserir(Criar{NomeEntidade}Command command) =>
+            await Mediator.Send(command);
+
+        public async Task<Response<{NomeEntidade}>> Atualizar(Atualizar{NomeEntidade}Command command) =>
+            await Mediator.Send(command);
+
+        public async Task<Response<Guid>> Apagar(Apagar{NomeEntidade}Command command) =>
+            await Mediator.Send(command);
+        public async Task<Response<IEnumerable<Response<Guid>>>> ApagarVarios(ApagarVarios{NomeEntidade}Command command) =>
+            await Mediator.Send(command);
+    }
+}

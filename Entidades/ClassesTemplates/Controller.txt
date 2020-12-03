@@ -1,0 +1,130 @@
+﻿using {NomeSistema}.Domain.Commands;
+using {NomeSistema}.Domain.Interfaces;
+using {NomeSistema}.Domain.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace {NomeSistema}.Application.Controllers
+{
+    [Produces("application/json")]
+    [Route("v1/[controller]")]
+    [Authorize]
+    public class {NomeEntidade}Controller : AbstractController
+    {
+        private readonly I{NomeEntidade}Service _{NomeEntidade}Service;
+        private readonly IAuth _auth;
+
+        public {NomeEntidade}Controller(I{NomeEntidade}Service {NomeEntidade}Service, IAuth auth)
+        {
+            _{NomeEntidade}Service = {NomeEntidade}Service;
+            _auth = auth;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Inserir([FromBody] Criar{NomeEntidade}Command command)
+        {
+            try
+            {
+                var entidade = await _{NomeEntidade}Service.Inserir(command);
+
+                return Ok(entidade);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar([FromRoute] Guid id, [FromBody] Atualizar{NomeEntidade}Command command)
+        {
+            try
+            {
+                command.Id = id;
+                var entidade = await _{NomeEntidade}Service.Atualizar(command);
+
+                return Ok(entidade);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Remover([FromRoute] Guid id)
+        {
+            try
+            {
+                return Ok(await _{NomeEntidade}Service.Apagar(new Apagar{NomeEntidade}Command(id)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPost("removerVarios")]
+        public async Task<IActionResult> RemoverVarios([FromBody] Guid[] ids)
+        {
+            try
+            {    
+                return Ok(await _{NomeEntidade}Service.ApagarVarios(new ApagarVarios{NomeEntidade}Command(ids)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ObterTodos()
+        {
+            try
+            {
+                var entidade = _{NomeEntidade}Service.Obter();
+                return await Result(entidade);
+            }
+            catch (Exception ex)
+            {
+                return await Result<{NomeEntidade}View>(error: ex.Message);
+            }
+        }
+
+        [HttpGet("{id:Guid}")]
+        public async Task<IActionResult> ObterPelaId([FromRoute] Guid id)
+        {
+            try
+            {
+                var entidade = _{NomeEntidade}Service.ObterPelaId(id);                                    
+
+                return await Result(entidade);
+            }
+            catch (Exception ex)
+            {
+                return await Result<{NomeEntidade}View>(error: ex.Message);
+            }
+        }
+
+        [HttpGet("{condicao}")]
+        public async Task<IActionResult> Obter([FromRoute] string condicao)
+        {
+            try
+            {
+                var take = ObterTake(ref condicao);
+
+                var entidade = _{NomeEntidade}Service.Obter()
+                                    .WhereDynamic(x => MontarCondicoes(condicao, null, null));
+
+                return await Result(entidade, take: take);
+            }
+            catch (Exception ex)
+            {
+                return await Result<{NomeEntidade}View>(error: ex.Message);
+            }
+        }
+    }
+}
